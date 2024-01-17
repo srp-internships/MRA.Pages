@@ -1,0 +1,6 @@
+@MRA.Pages.Api_HostAddress = http://localhost:5060
+
+GET {{MRA.Pages.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
