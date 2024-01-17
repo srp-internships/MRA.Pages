@@ -12,7 +12,7 @@ public static class DependencyInitializer
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            var dbConnectionString = configuration.GetConnectionString("SqlServer")!;
+            var dbConnectionString = configuration.GetConnectionString("DefaultConnection")!;
             if (configuration["UseInMemoryDatabase"] == "true")
                 options.UseInMemoryDatabase("testDB");
             else

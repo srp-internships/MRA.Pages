@@ -1,7 +1,9 @@
 namespace MRA.Pages.Domain.Entities;
 
-public class Page : BaseEntity
+public class Page
 {
+    public Guid Id { get; set; }
+    public bool Disabled { get; set; }
     public required string Name { get; set; }
     public string Role { get; set; } = "";
     public bool ShowInMenu { get; set; }
