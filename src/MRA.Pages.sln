@@ -4,17 +4,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F856C617-165
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{28EAD853-28AA-4919-B90F-9E21E88F3AE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Domain", "src\MRA.Pages.Domain\MRA.Pages.Domain.csproj", "{8752B573-CDB0-4B18-8888-8FE8EEDB17E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Domain", "MRA.Pages.Domain\MRA.Pages.Domain.csproj", "{8752B573-CDB0-4B18-8888-8FE8EEDB17E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Application.Contract", "src\MRA.Pages.Application.Contract\MRA.Pages.Application.Contract.csproj", "{552AABEC-4DFC-4D03-B49E-CE70FF23EC93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Application.Contract", "MRA.Pages.Application.Contract\MRA.Pages.Application.Contract.csproj", "{552AABEC-4DFC-4D03-B49E-CE70FF23EC93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Application", "src\MRA.Pages.Application\MRA.Pages.Application.csproj", "{EE17DCB8-8382-479B-96BA-E5793F82E080}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Application", "MRA.Pages.Application\MRA.Pages.Application.csproj", "{EE17DCB8-8382-479B-96BA-E5793F82E080}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Infrastructure", "src\MRA.Pages.Infrastructure\MRA.Pages.Infrastructure.csproj", "{BC34B75B-F72E-4E20-AFC5-64D6A2FC58B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Infrastructure", "MRA.Pages.Infrastructure\MRA.Pages.Infrastructure.csproj", "{BC34B75B-F72E-4E20-AFC5-64D6A2FC58B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Api", "src\MRA.Pages.Api\MRA.Pages.Api.csproj", "{ECC6EE98-C224-4344-90D7-18CF868029C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MRA.Pages.Api", "MRA.Pages.Api\MRA.Pages.Api.csproj", "{ECC6EE98-C224-4344-90D7-18CF868029C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{DF8C799B-5225-4B8E-81D4-1C126B4B6E53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "..\tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{DF8C799B-5225-4B8E-81D4-1C126B4B6E53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
