@@ -5,14 +5,14 @@
 namespace MRA.Pages.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ContentApplication : Migration
+    public partial class PageApplication : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
                 name: "Application",
-                table: "Contents",
+                table: "Pages",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -22,7 +22,7 @@ namespace MRA.Pages.Infrastructure.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Application",
-                table: "Contents");
+                table: "Pages");
         }
     }
 }
