@@ -1,6 +1,6 @@
 namespace MRA.Pages.Application.Contract.Content.Commands;
 
-public class UpdateContentCommand
+public class UpdateContentCommand : IRequest<Unit>
 {
     public required string PageName { get; set; }
     public string HtmlContent { get; set; } = "";

@@ -1,6 +1,6 @@
 namespace MRA.Pages.Application.Contract.Content.Responses;
 
-public class ContentResponse
+public sealed record ContentResponse
 {
     public required string Lang { get; set; }
     public required string PageName { get; set; }
