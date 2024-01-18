@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MRA.Configurations.Common.Constants;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Infrastructure.Identity;
 using MRA.Pages.Infrastructure.Persistence;
