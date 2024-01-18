@@ -1,6 +1,6 @@
-namespace MRA.Pages.Application.Contract.Pages.Commands;
+namespace MRA.Pages.Application.Contract.Page.Commands;
 
-public class CreatePageCommand : IRequest<string>
+public class UpdatePageCommand : IRequest<Unit>
 {
     public bool Disabled { get; set; }
     public required string Name { get; set; }
