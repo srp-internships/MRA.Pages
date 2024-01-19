@@ -1,14 +1,11 @@
+using MRA.Pages.Api;
 using MRA.Pages.Application;
 using MRA.Pages.Infrastructure;
 using MRA.Pages.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-
-
+builder.Services.AddApiServices();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 

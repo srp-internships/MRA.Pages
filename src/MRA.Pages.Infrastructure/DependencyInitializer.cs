@@ -58,14 +58,14 @@ public static class DependencyInitializer
                 .RequireAuthenticatedUser()
                 .Build())
             .AddPolicy(ApplicationPolicies.SuperAdministrator, op => op
-                .RequireRole(ApplicationClaimValues.SuperAdministrator)
-                .RequireClaim(ClaimTypes.Application))
+                .RequireRole(ApplicationClaimValues.SuperAdministrator))
+            
             .AddPolicy(ApplicationPolicies.Administrator, op => op
-                .RequireRole(ApplicationClaimValues.SuperAdministrator, ApplicationClaimValues.Administrator)
-                .RequireClaim(ClaimTypes.Application))
+                .RequireRole(ApplicationClaimValues.SuperAdministrator, ApplicationClaimValues.Administrator))
+            
             .AddPolicy(ApplicationPolicies.Reviewer, op => op
-                .RequireRole(ApplicationClaimValues.Reviewer)
-                .RequireClaim(ClaimTypes.Application));
+                .RequireRole(ApplicationClaimValues.Reviewer, ApplicationClaimValues.Administrator,
+                    ApplicationClaimValues.SuperAdministrator));
 
         var corsAllowedHosts = configuration.GetSection("MraPages-CORS").Get<string[]>();
         services.AddCors(options =>

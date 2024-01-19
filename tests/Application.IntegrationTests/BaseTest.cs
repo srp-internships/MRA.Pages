@@ -11,10 +11,10 @@ using ClaimTypes = MRA.Configurations.Common.Constants.ClaimTypes;
 namespace Application.IntegrationTests;
 
 [TestFixture]
-public class BaseTest
+public abstract class BaseTest
 {
     // ReSharper disable once InconsistentNaming
-    protected HttpClient _httpClient => _factory.CreateDefaultClient();
+    protected HttpClient _httpClient { get; private set; } = null!;
     private CustomWebApplicationFactory _factory = null!;
     private readonly JwtTokenService _tokenService = new();
     private ApplicationDbContext _context = null!;
@@ -29,7 +29,7 @@ public class BaseTest
     public virtual Task OneTimeSetup()
     {
         _factory = new CustomWebApplicationFactory();
-
+        _httpClient = _factory.CreateDefaultClient();
         var configuration = _factory.Services.GetRequiredService<IServiceScopeFactory>()
             .CreateScope().ServiceProvider.GetRequiredService<IConfiguration>();
         _jwtSecret = configuration["JWT:Secret"]!;

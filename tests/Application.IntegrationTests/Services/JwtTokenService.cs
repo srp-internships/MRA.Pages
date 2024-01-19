@@ -29,7 +29,7 @@ public class JwtTokenService : IDisposable
         var expireDate = DateTime.Now.AddDays(2);
 
         JwtSecurityToken token = new(
-            claims: claims,
+            claims: _commonClaims,
             expires: expireDate,
             signingCredentials: credentials);
 
