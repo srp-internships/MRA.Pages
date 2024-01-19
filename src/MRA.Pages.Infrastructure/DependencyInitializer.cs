@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using MRA.Configurations.Common.Constants;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Infrastructure.Identity;
 using MRA.Pages.Infrastructure.Persistence;
+using MRA.Pages.Infrastructure.Services;
 
 namespace MRA.Pages.Infrastructure;
 
@@ -59,10 +59,8 @@ public static class DependencyInitializer
                 .Build())
             .AddPolicy(ApplicationPolicies.SuperAdministrator, op => op
                 .RequireRole(ApplicationClaimValues.SuperAdministrator))
-            
             .AddPolicy(ApplicationPolicies.Administrator, op => op
                 .RequireRole(ApplicationClaimValues.SuperAdministrator, ApplicationClaimValues.Administrator))
-            
             .AddPolicy(ApplicationPolicies.Reviewer, op => op
                 .RequireRole(ApplicationClaimValues.Reviewer, ApplicationClaimValues.Administrator,
                     ApplicationClaimValues.SuperAdministrator));
@@ -77,6 +75,9 @@ public static class DependencyInitializer
                     .AllowAnyMethod();
             });
         });
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         return services;
     }
 }

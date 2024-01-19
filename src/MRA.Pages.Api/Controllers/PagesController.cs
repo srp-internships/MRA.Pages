@@ -6,10 +6,9 @@ using MRA.Pages.Infrastructure.Identity;
 
 namespace MRA.Pages.Api.Controllers;
 
-[ApiController]
 [Route("/api/[controller]")]
 public class PagesController(ISender mediator)
-    : ControllerBase
+    : Controller
 {
     [Authorize]
     [HttpGet]

@@ -1,5 +1,4 @@
 using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MRA.Pages.Application.Common.Exceptions;
 using MRA.Pages.Application.Common.Interfaces;

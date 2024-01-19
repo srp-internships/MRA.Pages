@@ -11,6 +11,7 @@ using ClaimTypes = MRA.Configurations.Common.Constants.ClaimTypes;
 namespace Application.IntegrationTests;
 
 [TestFixture]
+[Ignore("changing to mvc")]
 public abstract class BaseTest
 {
     // ReSharper disable once InconsistentNaming

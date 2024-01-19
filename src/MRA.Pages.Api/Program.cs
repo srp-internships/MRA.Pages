@@ -4,6 +4,8 @@ using MRA.Pages.Infrastructure;
 using MRA.Pages.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews();
+
 
 builder.Services.AddApiServices();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -28,8 +30,15 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseHttpsRedirection();
-app.MapControllers();
+
 app.UseCors("CORS_POLICY");
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseAuthentication();
 app.UseAuthorization();

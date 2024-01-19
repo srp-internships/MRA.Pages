@@ -1,0 +1,52 @@
+@using MRA.Pages.Application.Contract.Page.Responses
+@{
+    ViewBag.Title = "Pages";
+    Layout = "_Layout";
+}
+<h3>Pages</h3>
+<table class="table">
+    <thead>
+    <tr>
+
+        <th>#</th>
+        <th>Name</th>
+        <th>Disabled</th>
+        <th>Application</th>
+        <th>Role</th>
+        <th>Show in menu?</th>
+        <th>Edit</th>
+        <th>Remove</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        @{
+            var i = 1;
+            var pages = (List<PageResponse>)ViewBag.PageResponses;
+            foreach (var pageResponse in pages)
+            {
+                <td>@i</td>
+                <td>@pageResponse.Name</td>
+                <td>@pageResponse.Disabled</td>
+                <td>@pageResponse.ShowInMenu</td>
+                <td>@pageResponse.Application</td>
+                <td>@pageResponse.Role</td>
+                <td>@(pageResponse.ShowInMenu ? "Yes" : "No")</td>
+                <td>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </td>
+                @{
+                    i++;
+                }
+            }
+        }
+    </tr>
+    </tbody>
+</table>
