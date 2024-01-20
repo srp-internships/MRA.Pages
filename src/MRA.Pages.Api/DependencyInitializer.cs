@@ -6,6 +6,8 @@ public static class DependencyInitializer
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
+        services.AddControllersWithViews();
+
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
