@@ -22,8 +22,8 @@ public class PagesController(ISender mediator)
         });
     }
 
-    [HttpPost]
     [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
+    [HttpPost]
     public async Task<IActionResult> CreatePage([FromBody] CreatePageCommand command)
     {
         await mediator.Send(command);

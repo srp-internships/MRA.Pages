@@ -16,4 +16,10 @@ public class PagesViewController(ISender mediator)
         ViewBag.PageResponses = result;
         return View();
     }
+
+    [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
+    public async Task<IActionResult> Create()
+    {
+        return View();
+    }
 }
