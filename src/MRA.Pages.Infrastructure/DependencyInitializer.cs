@@ -1,15 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using MRA.Configurations.Common.Constants;
+using Microsoft.Net.Http.Headers;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Infrastructure.Identity;
 using MRA.Pages.Infrastructure.Persistence;
+using MRA.Pages.Infrastructure.Services;
 
 namespace MRA.Pages.Infrastructure;
 
@@ -36,15 +40,26 @@ public static class DependencyInitializer
         IConfiguration configuration)
     {
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-        services.AddAuthentication(o =>
+
+        services.AddAuthentication(options =>
         {
-            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(op =>
         {
+            op.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    context.Token = context.Request.Cookies["authToken"];
+                    return Task.CompletedTask;
+                }
+            };
             op.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = false,
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
@@ -54,18 +69,16 @@ public static class DependencyInitializer
         });
 
         services.AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build())
             .AddPolicy(ApplicationPolicies.SuperAdministrator, op => op
-                .RequireRole(ApplicationClaimValues.SuperAdministrator)
-                .RequireClaim(ClaimTypes.Application))
+                .RequireRole(ApplicationClaimValues.SuperAdministrator))
             .AddPolicy(ApplicationPolicies.Administrator, op => op
-                .RequireRole(ApplicationClaimValues.SuperAdministrator, ApplicationClaimValues.Administrator)
-                .RequireClaim(ClaimTypes.Application))
+                .RequireRole(ApplicationClaimValues.SuperAdministrator, ApplicationClaimValues.Administrator))
             .AddPolicy(ApplicationPolicies.Reviewer, op => op
-                .RequireRole(ApplicationClaimValues.Reviewer)
-                .RequireClaim(ClaimTypes.Application));
+                .RequireRole(ApplicationClaimValues.Reviewer, ApplicationClaimValues.Administrator,
+                    ApplicationClaimValues.SuperAdministrator));
 
         var corsAllowedHosts = configuration.GetSection("MraPages-CORS").Get<string[]>();
         services.AddCors(options =>
@@ -77,6 +90,9 @@ public static class DependencyInitializer
                     .AllowAnyMethod();
             });
         });
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         return services;
     }
 }

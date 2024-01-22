@@ -1,14 +1,11 @@
+using MRA.Pages.Api;
 using MRA.Pages.Application;
 using MRA.Pages.Infrastructure;
 using MRA.Pages.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-
-
+builder.Services.AddApiServices();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
@@ -31,8 +28,17 @@ using (var scope = app.Services.CreateScope())
 
 
 app.UseHttpsRedirection();
-app.MapControllers();
+
 app.UseCors("CORS_POLICY");
+
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCookiePolicy();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseAuthentication();
 app.UseAuthorization();
