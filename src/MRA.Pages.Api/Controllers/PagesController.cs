@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MRA.Pages.Application.Contract.Page.Commands;
@@ -7,6 +8,7 @@ using MRA.Pages.Infrastructure.Identity;
 namespace MRA.Pages.Api.Controllers;
 
 [Route("/api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PagesController(ISender mediator)
     : Controller
 {
