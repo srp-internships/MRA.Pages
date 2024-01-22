@@ -1,0 +1,84 @@
+@using MRA.Pages.Application.Contract
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CreateContentCommand
+
+@{
+    ViewBag.Title = "Create content for " + ViewBag.PageName;
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>@ViewBag.Title</h4>
+                </div>
+                <div class="card-body">
+
+                    <form method="post" action="@Routes.Contents" id="createContentForm">
+                        <input type="hidden" asp-for="PageName" value="@ViewBag.PageName"/>
+                        <div class="form-group">
+                            <label asp-for="Lang">Lang</label>
+                            <input type="text" class="form-control" asp-for="Lang" placeholder="Enter page name">
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Title">Title</label>
+                            <input type="text" class="form-control" asp-for="Title" placeholder="Enter application">
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="HtmlContent">Content</label>
+
+                            <div id="editor">
+                                <p>Hello World!</p>
+                                <p>Some initial <strong>bold</strong> text</p>
+                                <p>
+                                    <br>
+                                </p>
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="HtmlContent"/>
+                        <button type="button" onclick="internal_submitForm()" class="btn btn-primary btn-block">Create content</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script>
+        var toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+            ['blockquote', 'code-block'],
+
+            [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+            [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+            [{ 'direction': 'rtl' }],                         // text direction
+
+            [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [ 'link', 'image', 'video', 'formula' ],          // add's image support
+            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+
+            ['clean']                                         // remove formatting button
+        ];
+
+    var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+
+        theme: 'snow'
+    });
+    
+    function internal_submitForm(){
+            document.getElementById('HtmlContent').value=quill.container.innerHTML;
+            submitForm('createContentForm');
+        }
+</script>

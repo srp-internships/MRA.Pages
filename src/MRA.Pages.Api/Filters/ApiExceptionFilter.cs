@@ -101,6 +101,7 @@ public class ApiExceptionFilter(ILogger<ApiExceptionFilter> logger) : ExceptionF
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
             Title = "The specified resource was not found.",
+            Detail = context.Exception.Message
         };
 
         context.Result = new NotFoundObjectResult(details);

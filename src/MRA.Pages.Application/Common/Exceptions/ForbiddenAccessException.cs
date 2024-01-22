@@ -1,3 +1,8 @@
 namespace MRA.Pages.Application.Common.Exceptions;
 
-public class ForbiddenAccessException(string message) : Exception(message);
+public class ForbiddenAccessException(string message) : Exception(message)
+{
+    public ForbiddenAccessException() : this("")
+    {
+    }
+}
