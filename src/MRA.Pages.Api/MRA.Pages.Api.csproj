@@ -20,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
@@ -28,6 +27,7 @@
       <_ContentIncludedByDefault Remove="Shared\Layouts\SuperAdminLayout.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Authorization\UnAuthorized.cshtml" />
     </ItemGroup>
 
 </Project>

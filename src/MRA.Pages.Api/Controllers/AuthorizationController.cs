@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MRA.Pages.Api.Controllers;
 
-public class AuthorizationController : Controller
+public class AuthorizationController(IConfiguration configuration)
+    : Controller
 {
     public IActionResult CallBack(string atoken)
     {
@@ -15,5 +16,11 @@ public class AuthorizationController : Controller
             IsEssential = false
         });
         return RedirectToAction("Index", "PagesView");
+    }
+
+    public IActionResult UnAuthorized()
+    {
+        ViewBag.LoginUrl = configuration["MraIdentity-client"]!+"";
+        return View();
     }
 }

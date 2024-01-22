@@ -6,10 +6,10 @@ using MRA.Pages.Infrastructure.Identity;
 
 namespace MRA.Pages.Api.Controllers;
 
+[Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
 public class PagesViewController(ISender mediator)
     : Controller
 {
-    [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
     public async Task<IActionResult> Index(GetPagesQuery? query = null)
     {
         var result = await mediator.Send(query ?? new GetPagesQuery());
@@ -17,7 +17,6 @@ public class PagesViewController(ISender mediator)
         return View();
     }
 
-    [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
     public IActionResult Create()
     {
         return View();

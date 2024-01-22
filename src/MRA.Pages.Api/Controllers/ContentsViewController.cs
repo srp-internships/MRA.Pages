@@ -6,10 +6,10 @@ using MRA.Pages.Infrastructure.Identity;
 
 namespace MRA.Pages.Api.Controllers;
 
+[Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
 public class ContentViewController(ISender mediator)
     : Controller
 {
-    [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
     public async Task<IActionResult> Index(string pageName)
     {
         var contentResponses = await mediator.Send(new GetContentsQuery
