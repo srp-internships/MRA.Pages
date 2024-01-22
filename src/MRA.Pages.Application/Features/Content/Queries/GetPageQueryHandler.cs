@@ -4,7 +4,6 @@ using MRA.Pages.Application.Common.Exceptions;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Application.Contract.Content.Queries;
 using MRA.Pages.Application.Contract.Content.Responses;
-using Newtonsoft.Json;
 
 namespace MRA.Pages.Application.Features.Content.Queries;
 
