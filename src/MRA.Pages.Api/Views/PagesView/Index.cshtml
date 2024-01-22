@@ -32,18 +32,18 @@
                 <td>@pageResponse.Role</td>
                 <td>@(pageResponse.ShowInMenu ? "Yes" : "No")</td>
                 <td>
-                    <button type="button" class="btn btn-primary">
-                        <i class="fas fa-edit"></i> Contents
+                    <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "ContentView")?pageName=@pageResponse.Name'">
+                        <i class="bi-book"></i> Contents
                     </button>
                 </td>
                 <td>
                     <button type="button" class="btn btn-primary">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fas bi-pen"></i> Edit
                     </button>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Remove
+                        <i class="bi-trash"></i> Remove
                     </button>
                 </td>
                 @{ i++; }

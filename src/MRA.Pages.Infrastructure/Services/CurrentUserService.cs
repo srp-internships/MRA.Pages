@@ -10,4 +10,9 @@ public class CurrentUserService(IHttpContextAccessor httpContext) : ICurrentUser
     {
         return httpContext.HttpContext?.User.IsInRole(ApplicationClaimValues.SuperAdministrator) ?? false;
     }
+
+    public bool IsInRole(string roleName)
+    {
+        return httpContext.HttpContext?.User.IsInRole(roleName) ?? false;
+    }
 }

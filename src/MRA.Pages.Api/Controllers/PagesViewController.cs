@@ -18,7 +18,7 @@ public class PagesViewController(ISender mediator)
     }
 
     [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         return View();
     }
