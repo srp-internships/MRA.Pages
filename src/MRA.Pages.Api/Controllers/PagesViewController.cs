@@ -21,4 +21,10 @@ public class PagesViewController(ISender mediator)
     {
         return View();
     }
+
+    [AllowAnonymous]
+    public IActionResult Login()
+    {
+        return View();
+    }
 }
