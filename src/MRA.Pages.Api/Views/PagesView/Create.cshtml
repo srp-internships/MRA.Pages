@@ -1,4 +1,3 @@
-@using MRA.Pages.Application.Contract
 @model CreatePageCommand
 
 @{
@@ -16,7 +15,7 @@
                 </div>
                 <div class="card-body">
 
-                    <form method="post" action="@Routes.Pages" id="createPageForm">
+                    <form method="post" asp-action="Create" id="createPageForm">
                         <div class="form-group">
                             <label asp-for="Name">Name</label>
                             <input type="text" class="form-control" asp-for="Name" placeholder="Enter page name">
@@ -34,7 +33,7 @@
                             <label class="form-check-label" asp-for="ShowInMenu">Show in menu</label>
                         </div>
 
-                        <button type="button" onclick="submitForm('createPageForm')" class="btn btn-primary btn-block"><i class="bi-file-earmark-plus"></i>Create page</button>
+                        <button type="submit" class="btn btn-primary btn-block"><i class="bi-file-earmark-plus"></i>Create page</button>
                     </form>
 
                 </div>

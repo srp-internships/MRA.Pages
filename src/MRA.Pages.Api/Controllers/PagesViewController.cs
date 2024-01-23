@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MRA.Pages.Application.Contract.Page.Commands;
 using MRA.Pages.Application.Contract.Page.Queries;
 using MRA.Pages.Infrastructure.Identity;
 
@@ -22,9 +23,10 @@ public class PagesViewController(ISender mediator)
         return View();
     }
 
-    [AllowAnonymous]
-    public IActionResult Login()
+    [HttpPost]
+    public async Task<IActionResult> Create(CreatePageCommand command)
     {
-        return View();
+        await mediator.Send(command);
+        return RedirectToAction("Index");
     }
 }

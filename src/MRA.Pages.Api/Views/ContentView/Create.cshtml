@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
 
-                    <form method="post" action="@Routes.Contents" id="createContentForm">
+                    <form method="post" asp-action="Create" id="createContentForm">
                         <input type="hidden" asp-for="PageName" value="@ViewBag.PageName"/>
                         <div class="form-group">
                             <label asp-for="Lang">Lang</label>
@@ -79,6 +79,6 @@
     
     function internal_submitForm(){
             document.getElementById('HtmlContent').value=quill.container.innerHTML;
-            submitForm('createContentForm');
+            document.getElementById('createContentForm').submit();
         }
 </script>

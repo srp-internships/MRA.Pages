@@ -17,7 +17,8 @@ public class CreatePageCommandHandler(IApplicationDbContext context, IMapper map
             throw new ConflictException($"Page with name {request.Name} already exists");
         }
 
-        await context.Pages.AddAsync(mapper.Map<Domain.Entities.Page>(request), cancellationToken);
+        var page = mapper.Map<Domain.Entities.Page>(request);
+        await context.Pages.AddAsync(page, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
     }

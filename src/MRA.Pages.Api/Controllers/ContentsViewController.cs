@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MRA.Pages.Application.Contract.Content.Commands;
 using MRA.Pages.Application.Contract.Content.Queries;
 using MRA.Pages.Infrastructure.Identity;
 
@@ -26,5 +27,12 @@ public class ContentViewController(ISender mediator)
     {
         ViewBag.PageName = pageName;
         return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateContentCommand command)
+    {
+        await mediator.Send(command);
+        return Redirect($"/ContentView?pageName={command.PageName}");
     }
 }
