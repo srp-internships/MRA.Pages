@@ -33,7 +33,7 @@ public class PagesViewController(ISender mediator)
     [HttpGet]
     public async Task<IActionResult> Edit(string pageName)
     {
-        var pageResponse = await mediator.Send(new GetPageQuery
+        var pageResponse = await mediator.Send(new GetUpdatePageCommandQuery
         {
             Name = pageName
         });

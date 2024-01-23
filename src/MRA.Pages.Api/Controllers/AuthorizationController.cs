@@ -13,25 +13,34 @@ public class AuthorizationController(IConfiguration configuration) : Controller
     public async Task<IActionResult> CallBack(string atoken)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var res = tokenHandler.ValidateToken(atoken, new TokenValidationParameters
+        try
         {
-            ValidateIssuerSigningKey = false,
-            IssuerSigningKey =
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        }, out _);
-        var identity = new ClaimsIdentity(res.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        await HttpContext.SignOutAsync();
-        await HttpContext.SignInAsync(new ClaimsPrincipal(identity),
-            new AuthenticationProperties
+            var res = tokenHandler.ValidateToken(atoken, new TokenValidationParameters
             {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.MaxValue,
-                AllowRefresh = true
-            });
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            }, out _);
+            var identity = new ClaimsIdentity(res.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignOutAsync();
+            await HttpContext.SignInAsync(new ClaimsPrincipal(identity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.MaxValue,
+                    AllowRefresh = true
+                });
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Login");
+        }
+        
+        
         return RedirectToAction("Index", "PagesView");
     }
 
