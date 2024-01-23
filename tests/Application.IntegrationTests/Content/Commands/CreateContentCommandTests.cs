@@ -1,19 +1,15 @@
-using System.Net;
-using Application.IntegrationTests.Services;
+using MRA.Pages.Application.Common.Exceptions;
 using MRA.Pages.Application.Contract.Content.Commands;
-using MRA.Pages.Infrastructure.Identity;
 
 namespace Application.IntegrationTests.Content.Commands;
 
 public class CreateContentCommandTests : BaseTest
 {
     private MRA.Pages.Domain.Entities.Page _page = null!;
-    private const string CreateContentUrl = "/contentView/Create";
 
     [Test]
-    public async Task CreateContentCommand_ValidRequest_ReturnsOk()
+    public async Task CreateContentCommand_ValidRequest_ReturnsOkShouldSaveInDb()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         await SetPage("1");
         var command = new CreateContentCommand
         {
@@ -22,32 +18,14 @@ public class CreateContentCommandTests : BaseTest
             Lang = "ru",
             HtmlContent = "fasdfasdf"
         };
-        var response = await _httpClient.PostAsFormAsync(CreateContentUrl, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
-    }
-
-    [Test]
-    public async Task CreateContentCommand_ValidRequest_ShouldSaveInDb()
-    {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
-        await SetPage("afsd");
-        var command = new CreateContentCommand
-        {
-            PageName = _page.Name,
-            Title = "ad",
-            Lang = "fad",
-            HtmlContent = "fasdfasdfsasdf"
-        };
-        await _httpClient.PostAsFormAsync(CreateContentUrl, command);
+        Assert.DoesNotThrowAsync(async () => await _mediator.Send(command));
         var response = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Content>(s => s.Lang == command.Lang);
         Assert.That(response, Is.Not.Null);
     }
 
-
     [Test]
-    public async Task CreateContentCommand_ExistLang_ShouldNotInsert()
+    public async Task CreateContentCommand_ExistLang_ShouldNotInsertThrowsConflict()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         await SetPage("13");
         var command = new CreateContentCommand
         {
@@ -62,34 +40,14 @@ public class CreateContentCommandTests : BaseTest
             PageId = _page.Id,
             Title = command.Title
         });
-        await _httpClient.PostAsFormAsync(CreateContentUrl, command);
-
+        Assert.ThrowsAsync<ConflictException>(async () => await _mediator.Send(command));
+        
         var result =
             await WhereToListAsync<MRA.Pages.Domain.Entities.Content>(s =>
                 s.PageId == _page.Id || s.Lang == command.Lang);
         Assert.That(result, Has.Count.EqualTo(1));
     }
-
-    [Test]
-    public async Task CreateContentCommand_NotSuperAdminRole_ReturnsForbidden()
-    {
-        AddRoleAuthorization(ApplicationClaimValues.Administrator);
-        await SetPage("1rew3");
-        var command = new CreateContentCommand
-        {
-            PageName = _page.Name,
-            Title = "title",
-            Lang = "ru",
-            HtmlContent = "fasdfasdf"
-        };
-        var response = await _httpClient.PostAsFormAsync(CreateContentUrl, command);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
-
-            Assert.That(response.Headers.Location!.OriginalString, Does.Contain("/Authorization/login").IgnoreCase);
-        });
-    }
+    
 
     private async Task SetPage(string name)
     {

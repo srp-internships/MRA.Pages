@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MRA.Pages.Application.Contract.Content.Commands;
@@ -33,6 +34,6 @@ public class ContentViewController(ISender mediator)
     public async Task<IActionResult> Create(CreateContentCommand command)
     {
         await mediator.Send(command);
-        return Redirect($"/ContentView?pageName={command.PageName}");
+        return View("Index");
     }
 }

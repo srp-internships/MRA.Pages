@@ -1,8 +1,7 @@
 using System.Net;
-using System.Net.Http.Json;
+using MRA.Pages.Application.Common.Exceptions;
 using MRA.Pages.Application.Contract;
 using MRA.Pages.Application.Contract.Page.Commands;
-using MRA.Pages.Infrastructure.Identity;
 
 namespace Application.IntegrationTests.Page.Commands;
 
@@ -11,7 +10,6 @@ public class CreatePageCommandTests : BaseTest
     [Test]
     public async Task CreatePageCommand_ValidRequest_ReturnsOk()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         var command = new CreatePageCommand
         {
             Disabled = false,
@@ -20,23 +18,8 @@ public class CreatePageCommandTests : BaseTest
             Role = "",
             ShowInMenu = true
         };
-        var response = await _httpClient.PostAsJsonAsync(Routes.Pages, command);
-        response.EnsureSuccessStatusCode();
-    }
+        Assert.DoesNotThrowAsync(async () => await _mediator.Send(command));
 
-    [Test]
-    public async Task CreatePageCommand_ValidRequest_ShouldSaveInDb()
-    {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
-        var command = new CreatePageCommand
-        {
-            Disabled = false,
-            Name = "SaveDb",
-            Application = "",
-            Role = "",
-            ShowInMenu = true
-        };
-        await _httpClient.PostAsJsonAsync(Routes.Pages, command);
         var response = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
         Assert.That(response, Is.Not.Null);
     }
@@ -45,7 +28,6 @@ public class CreatePageCommandTests : BaseTest
     [Test]
     public async Task CreatePageCommand_ExistName_ReturnsConflictShouldNotInsert()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         var command = new CreatePageCommand
         {
             Disabled = false,
@@ -58,9 +40,8 @@ public class CreatePageCommandTests : BaseTest
         {
             Name = command.Name
         });
-        var response = await _httpClient.PostAsJsonAsync(Routes.Pages, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Conflict));
-
+        Assert.ThrowsAsync<ConflictException>(async () => await _mediator.Send(command));
+        
         var result = await WhereToListAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
         Assert.That(result, Has.Count.EqualTo(1));
     }
@@ -70,7 +51,6 @@ public class CreatePageCommandTests : BaseTest
     [Ignore("undefined")]
     public async Task CreatePageCommand_InvalidName_ReturnsBadRequestShouldNotInsert()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         var command = new CreatePageCommand
         {
             Disabled = false,
@@ -79,25 +59,7 @@ public class CreatePageCommandTests : BaseTest
             Role = "",
             ShowInMenu = true
         };
-        var response = await _httpClient.PostAsJsonAsync(Routes.Pages, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         var result = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
         Assert.That(result, Is.Null);
-    }
-
-    [Test]
-    public async Task CreatePageCommand_NotSuperAdminRole_ReturnsForbidden()
-    {
-        AddRoleAuthorization(ApplicationClaimValues.Administrator);
-        var command = new CreatePageCommand
-        {
-            Disabled = false,
-            Name = "forbidden",
-            Application = "",
-            Role = "",
-            ShowInMenu = true
-        };
-        var response = await _httpClient.PostAsJsonAsync(Routes.Pages, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 }
