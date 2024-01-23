@@ -29,4 +29,30 @@ public class PagesViewController(ISender mediator)
         await mediator.Send(command);
         return RedirectToAction("Index");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string pageName)
+    {
+        var pageResponse = await mediator.Send(new GetPageQuery
+        {
+            Name = pageName
+        });
+        var model = new UpdatePageCommand
+        {
+            OldName = pageName,
+            Disabled = pageResponse.Disabled,
+            Name = pageResponse.Name,
+            Application = pageResponse.Application,
+            Role = pageResponse.Role,
+            ShowInMenu = pageResponse.ShowInMenu
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(UpdatePageCommand updatePageCommand)
+    {
+        await mediator.Send(updatePageCommand);
+        return RedirectToAction("Index");
+    }
 }
