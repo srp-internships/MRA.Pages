@@ -1,47 +1,20 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using MRA.Pages.Infrastructure.Services;
 
 namespace MRA.Pages.Api.Controllers;
 
-public class AuthorizationController(IConfiguration configuration) : Controller
+public class AuthorizationController(IConfiguration configuration, JwtChecker checker) : Controller
 {
     public async Task<IActionResult> CallBack(string atoken)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        try
+        var success = await checker.LoginAsync(atoken);
+        if (success)
         {
-            var res = tokenHandler.ValidateToken(atoken, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            }, out _);
-            var identity = new ClaimsIdentity(res.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "PagesView");
+        }
 
-            await HttpContext.SignOutAsync();
-            await HttpContext.SignInAsync(new ClaimsPrincipal(identity),
-                new AuthenticationProperties
-                {
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.MaxValue,
-                    AllowRefresh = true
-                });
-        }
-        catch (Exception)
-        {
-            return RedirectToAction("Login");
-        }
-        
-        
-        return RedirectToAction("Index", "PagesView");
+        ViewBag.ErrorMessage = "Authorization failed";
+        return View("ExtraPages/ErrorPage");
     }
 
     public IActionResult Login()
