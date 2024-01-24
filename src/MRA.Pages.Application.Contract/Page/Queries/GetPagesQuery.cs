@@ -6,4 +6,5 @@ public class GetPagesQuery : IRequest<List<PageResponse>>
 {
     public string? Application { get; set; }
     public bool? ShowInMenu { get; set; }
+    public string? Lang { get; set; }
 }

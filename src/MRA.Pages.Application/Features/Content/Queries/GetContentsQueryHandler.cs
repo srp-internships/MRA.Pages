@@ -7,7 +7,7 @@ using MRA.Pages.Application.Contract.Content.Responses;
 
 namespace MRA.Pages.Application.Features.Content.Queries;
 
-public class GetPagesQueryHandler(IApplicationDbContext context, IMapper mapper)
+public class GetContentsQueryHandler(IApplicationDbContext context, IMapper mapper)
     : IRequestHandler<GetContentsQuery, List<ContentResponse>>
 {
     public async Task<List<ContentResponse>> Handle(GetContentsQuery request, CancellationToken cancellationToken)
