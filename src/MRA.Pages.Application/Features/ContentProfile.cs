@@ -13,5 +13,6 @@ public class ContentProfile : Profile
                 op.MapFrom(f => f.Page == null ? "" : f.Page.Name));
 
         CreateMap<CreateContentCommand, Domain.Entities.Content>();
+        CreateMap<ContentResponse, UpdateContentCommand>();
     }
 }
