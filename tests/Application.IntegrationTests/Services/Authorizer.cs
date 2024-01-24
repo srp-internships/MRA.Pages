@@ -4,6 +4,7 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MRA.Pages.Infrastructure.Identity;
 using ClaimTypes = MRA.Configurations.Common.Constants.ClaimTypes;
 
 namespace Application.IntegrationTests.Services;
@@ -16,29 +17,26 @@ public static class Authorizer
     {
         client.DefaultRequestHeaders.Clear(); //todo clear token from cookie without clearing header;
     }
-
+    
     public static async Task AddAuthorizationAsync(this HttpClient client, IEnumerable<Claim> claims)
     {
         var token = CreateJwt(claims);
-        var response = await client.GetAsync($"/Authorization/callback?token={token}");
+        var response = await client.GetAsync($"/authorization/callback?atoken={token}");
 
-        if (response.StatusCode == HttpStatusCode.Redirect)
-        {
-            var redirectUri = response.Headers.Location;
-            response = await client.GetAsync(redirectUri);
-            var cookies = response.Headers.GetValues("Set-Cookie");
+        if (response.StatusCode != HttpStatusCode.Redirect) throw new AuthenticationException();
+        
+        var redirectUri = response.Headers.Location;
+        response = await client.GetAsync(redirectUri);
+        var cookies = response.Headers.GetValues("Set-Cookie");
 
-            const string targetCookieName = ".AspNetCore.Cookies";
+        const string targetCookieName = ".AspNetCore.Cookies";
 
-            var targetCookieValue = cookies
-                .Where(cookie => cookie.Equals(targetCookieName))
-                .Select(cookie => cookie.Split(';')[0])
-                .FirstOrDefault() ?? throw new AuthenticationException();
+        var targetCookieValue = cookies
+            .Where(cookie => cookie.Equals(targetCookieName))
+            .Select(cookie => cookie.Split(';')[0])
+            .FirstOrDefault() ?? throw new AuthenticationException();
 
-            client.DefaultRequestHeaders.Add("Cookie", targetCookieValue);
-        }
-
-        throw new AuthenticationException();
+        client.DefaultRequestHeaders.Add("Cookie", targetCookieValue);
     }
 
     private static string CreateJwt(IEnumerable<Claim> claims)
@@ -73,6 +71,9 @@ public class ClaimsBuilder
     public ClaimsBuilder AddRole(string roleName) =>
         AddClaim(ClaimTypes.Role, roleName);
 
+    public ClaimsBuilder AddSuperAdminRole() =>
+        AddRole(ApplicationClaimValues.SuperAdministrator);
+    
     public ClaimsBuilder AddApplication(string applicationName) =>
         AddClaim(ClaimTypes.Application, applicationName);
 

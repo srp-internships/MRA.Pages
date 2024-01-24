@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Application.IntegrationTests.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,9 @@ public abstract class BaseTest
 {
     // ReSharper disable once InconsistentNaming
     protected IConfiguration _configuration { get; private set; } = null!;
+
+    // ReSharper disable once InconsistentNaming
+    protected HttpClient _httpClient { get; private set; } = null!;
 
     // ReSharper disable once InconsistentNaming
     protected ISender _mediator { get; private set; } = null!;
@@ -35,6 +39,10 @@ public abstract class BaseTest
 
         _mediator = _factory.Services.GetRequiredService<IServiceScopeFactory>()
             .CreateScope().ServiceProvider.GetRequiredService<ISender>();
+
+        _httpClient = _factory.CreateClient();
+
+        Authorizer.JwtSecret = _configuration["JWT:Secret"];
         return Task.CompletedTask;
     }
 
