@@ -38,7 +38,7 @@ app.UseCookiePolicy();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=PagesView}/{action=Index}/{id?}");
 
 app.UseAuthentication();
 app.UseAuthorization();

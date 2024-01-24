@@ -1,8 +1,7 @@
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model CreateContentCommand
+@model UpdateContentCommand
 
 @{
-    ViewBag.Title = "Create content for " + ViewBag.PageName;
+    ViewBag.Title = "Edit content " + Model.Lang;
     Layout = "_Layout";
 }
 
@@ -15,8 +14,9 @@
                 </div>
                 <div class="card-body">
 
-                    <form method="post" asp-action="Create" id="createContentForm">
+                    <form method="post" asp-action="Update" id="createContentForm">
                         <input type="hidden" asp-for="PageName" value="@ViewBag.PageName"/>
+                        <input type="hidden" asp-for="OldLang" value="@Model.Lang"/>
                         <div class="form-group">
                             <label asp-for="Lang">Lang</label>
                             <input type="text" class="form-control" asp-for="Lang" placeholder="Enter page name">
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <input type="hidden" asp-for="HtmlContent"/>
-                        <button type="button" onclick="internal_submitForm()" class="btn btn-primary btn-block">Create content</button>
+                        <button type="button" onclick="internal_submitForm()" class="btn btn-primary btn-block">Update content</button>
                     </form>
 
                 </div>

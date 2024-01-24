@@ -9,6 +9,8 @@ public class PageProfile : Profile
     public PageProfile()
     {
         CreateMap<CreatePageCommand, Domain.Entities.Page>();
+        CreateMap<UpdatePageCommand, Domain.Entities.Page>();
+        CreateMap<Domain.Entities.Page, UpdatePageCommand>();
         CreateMap<Domain.Entities.Page, PageResponse>();
     }
 }

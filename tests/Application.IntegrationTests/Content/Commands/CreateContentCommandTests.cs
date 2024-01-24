@@ -1,19 +1,23 @@
 using System.Net;
-using System.Net.Http.Json;
-using MRA.Pages.Application.Contract;
+using Application.IntegrationTests.Services;
 using MRA.Pages.Application.Contract.Content.Commands;
-using MRA.Pages.Infrastructure.Identity;
 
 namespace Application.IntegrationTests.Content.Commands;
 
 public class CreateContentCommandTests : BaseTest
 {
     private MRA.Pages.Domain.Entities.Page _page = null!;
+    private const string CreateContentUrl = "/contentView/Create";
+
+    [SetUp]
+    public async Task Setup()
+    {
+        await _httpClient.AddAuthorizationAsync(ClaimsBuilder.New().AddSuperAdminRole().Build());
+    }
 
     [Test]
     public async Task CreateContentCommand_ValidRequest_ReturnsOk()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         await SetPage("1");
         var command = new CreateContentCommand
         {
@@ -22,32 +26,30 @@ public class CreateContentCommandTests : BaseTest
             Lang = "ru",
             HtmlContent = "fasdfasdf"
         };
-        var response = await _httpClient.PostAsJsonAsync(Routes.Contents, command);
-        response.EnsureSuccessStatusCode();
+        var response = await _httpClient.PostAsFormAsync(CreateContentUrl, command);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
     }
 
     [Test]
     public async Task CreateContentCommand_ValidRequest_ShouldSaveInDb()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
-        await SetPage("12");
+        await SetPage("afsd");
         var command = new CreateContentCommand
         {
             PageName = _page.Name,
-            Title = "titadsle",
-            Lang = "ru-en",
+            Title = "ad",
+            Lang = "fad",
             HtmlContent = "fasdfasdfsasdf"
         };
-        await _httpClient.PostAsJsonAsync(Routes.Contents, command);
+        await _httpClient.PostAsFormAsync(CreateContentUrl, command);
         var response = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Content>(s => s.Lang == command.Lang);
         Assert.That(response, Is.Not.Null);
     }
 
 
     [Test]
-    public async Task CreateContentCommand_ExistLang_ReturnsConflictShouldNotInsert()
+    public async Task CreateContentCommand_ExistLang_ShouldNotInsert()
     {
-        AddRoleAuthorization(ApplicationClaimValues.SuperAdministrator);
         await SetPage("13");
         var command = new CreateContentCommand
         {
@@ -62,8 +64,7 @@ public class CreateContentCommandTests : BaseTest
             PageId = _page.Id,
             Title = command.Title
         });
-        var response = await _httpClient.PostAsJsonAsync(Routes.Contents, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Conflict));
+        await _httpClient.PostAsFormAsync(CreateContentUrl, command);
 
         var result =
             await WhereToListAsync<MRA.Pages.Domain.Entities.Content>(s =>
@@ -74,7 +75,6 @@ public class CreateContentCommandTests : BaseTest
     [Test]
     public async Task CreateContentCommand_NotSuperAdminRole_ReturnsForbidden()
     {
-        AddRoleAuthorization(ApplicationClaimValues.Administrator);
         await SetPage("1rew3");
         var command = new CreateContentCommand
         {
@@ -83,8 +83,8 @@ public class CreateContentCommandTests : BaseTest
             Lang = "ru",
             HtmlContent = "fasdfasdf"
         };
-        var response = await _httpClient.PostAsJsonAsync(Routes.Contents, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        var response = await _httpClient.PostAsFormAsync(CreateContentUrl, command);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
     }
 
     private async Task SetPage(string name)

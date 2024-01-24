@@ -1,8 +1,7 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MRA.Pages.Application.Contract.Page.Commands;
-using MRA.Pages.Infrastructure.Identity;
+using MRA.Pages.Application.Contract.Content.Queries;
+using MRA.Pages.Application.Contract.Page.Queries;
 
 namespace MRA.Pages.Api.Controllers;
 
@@ -10,23 +9,17 @@ namespace MRA.Pages.Api.Controllers;
 public class PagesController(ISender mediator)
     : Controller
 {
-    [Authorize]
     [HttpGet]
-    public Task<IActionResult> Get([FromQuery] string lang = "ru-Ru")
+    public async Task<IActionResult> Get()
     {
-        return Task.FromResult<IActionResult>(new ContentResult
-        {
-            Content = "test",
-            ContentType = "text/pain",
-            StatusCode = 200
-        });
+        var pages = await mediator.Send(new GetPagesQuery());
+        return Ok(pages);
     }
 
-    [Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
-    [HttpPost]
-    public async Task<IActionResult> CreatePage([FromBody] CreatePageCommand command)
+    [HttpGet(nameof(GetContent))]
+    public async Task<IActionResult> GetContent([FromQuery] GetContentQuery query)
     {
-        await mediator.Send(command);
-        return Ok();
+        var contentResponse = await mediator.Send(query);
+        return Ok(contentResponse);
     }
 }

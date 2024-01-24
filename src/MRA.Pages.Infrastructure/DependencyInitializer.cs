@@ -1,15 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Infrastructure.Identity;
 using MRA.Pages.Infrastructure.Persistence;
@@ -32,6 +30,7 @@ public static class DependencyInitializer
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         services.AddScoped<ApplicationDbContextInitializer>();
         services.AddScoped<DbMigration>();
+        services.AddScoped<JwtChecker>();
         return services.AddSecurityProviders(configuration);
     }
 
@@ -49,14 +48,6 @@ public static class DependencyInitializer
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(op =>
         {
-            op.Events = new JwtBearerEvents
-            {
-                OnMessageReceived = context =>
-                {
-                    context.Token = context.Request.Cookies["authToken"];
-                    return Task.CompletedTask;
-                }
-            };
             op.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = false,
@@ -66,6 +57,18 @@ public static class DependencyInitializer
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
+        });
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        })
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/Authorization/Login";
+            options.AccessDeniedPath = "/Account/AccessDenied";
         });
 
         services.AddAuthorizationBuilder()

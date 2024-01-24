@@ -1,19 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
+using MRA.Pages.Infrastructure.Services;
 
 namespace MRA.Pages.Api.Controllers;
 
-public class AuthorizationController : Controller
+public class AuthorizationController(IConfiguration configuration, JwtChecker checker) : Controller
 {
-    public IActionResult CallBack(string atoken)
+    public async Task<IActionResult> CallBack(string atoken)
     {
-        HttpContext.Response.Cookies.Append("authToken", atoken, new CookieOptions
+        var success = await checker.LoginAsync(atoken);
+        if (success)
         {
-            Secure = false,
-            Expires = DateTimeOffset.Now.AddDays(10),
-            SameSite = SameSiteMode.Lax,
-            HttpOnly = true,
-            IsEssential = false
-        });
-        return RedirectToAction("Index", "PagesView");
+            return RedirectToAction("Index", "PagesView");
+        }
+
+        ViewBag.ErrorMessage = "Authorization failed";
+        return View("ExtraPages/ErrorPage");
+    }
+
+    public IActionResult Login()
+    {
+        return Redirect(
+            $"{configuration["MraIdentity-client"]}/login?callback={configuration["MraPages-hostname"]}/Authorization/callback");
     }
 }
