@@ -20,7 +20,7 @@ jobs:
       - name: build docker image for Pages Service
         run: |
           docker build -t silkroadprofessionals.azurecr.io/mra-pages-api:${{ steps.taggerDryRun.outputs.new_tag }} .
-        working-directory: ./src/MRA.Pages
+        working-directory: ./src
 
       - name: Publish Pages Service to ACR
         run: |
