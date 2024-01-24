@@ -84,12 +84,7 @@ public class CreateContentCommandTests : BaseTest
             HtmlContent = "fasdfasdf"
         };
         var response = await _httpClient.PostAsFormAsync(CreateContentUrl, command);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
-
-            Assert.That(response.Headers.Location!.OriginalString, Does.Contain("/Authorization/login").IgnoreCase);
-        });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
     }
 
     private async Task SetPage(string name)

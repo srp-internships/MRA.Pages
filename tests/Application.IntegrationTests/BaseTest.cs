@@ -40,7 +40,8 @@ public abstract class BaseTest
         _mediator = _factory.Services.GetRequiredService<IServiceScopeFactory>()
             .CreateScope().ServiceProvider.GetRequiredService<ISender>();
 
-        _httpClient = _factory.CreateClient();
+        _httpClient = _factory.CreateClient(new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions
+            { HandleCookies = true, AllowAutoRedirect = false });
 
         Authorizer.JwtSecret = _configuration["JWT:Secret"];
         return Task.CompletedTask;

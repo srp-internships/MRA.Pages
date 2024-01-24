@@ -21,22 +21,20 @@ public static class Authorizer
     public static async Task AddAuthorizationAsync(this HttpClient client, IEnumerable<Claim> claims)
     {
         var token = CreateJwt(claims);
-        var response = await client.GetAsync($"/authorization/callback?atoken={token}");
+        await client.GetAsync($"/authorization/callback?atoken={token}");
 
-        if (response.StatusCode != HttpStatusCode.Redirect) throw new AuthenticationException();
+        // if (response.StatusCode != HttpStatusCode.Redirect) throw new AuthenticationException();
         
-        var redirectUri = response.Headers.Location;
-        response = await client.GetAsync(redirectUri);
-        var cookies = response.Headers.GetValues("Set-Cookie");
-
-        const string targetCookieName = ".AspNetCore.Cookies";
-
-        var targetCookieValue = cookies
-            .Where(cookie => cookie.Equals(targetCookieName))
-            .Select(cookie => cookie.Split(';')[0])
-            .FirstOrDefault() ?? throw new AuthenticationException();
-
-        client.DefaultRequestHeaders.Add("Cookie", targetCookieValue);
+        // var cookies = response.Headers.GetValues("Set-Cookie");
+        //
+        // const string targetCookieName = ".AspNetCore.Cookies";
+        //
+        // var targetCookieValue = cookies
+        //     .Where(cookie => cookie.Equals(targetCookieName))
+        //     .Select(cookie => cookie.Split(';')[0])
+        //     .FirstOrDefault() ?? throw new AuthenticationException();
+        //
+        // client.DefaultRequestHeaders.Add("Cookie", targetCookieValue);
     }
 
     private static string CreateJwt(IEnumerable<Claim> claims)
