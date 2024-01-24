@@ -1,3 +1,5 @@
+using MRA.Configurations.Initializer.Azure.AppConfig;
+using MRA.Configurations.Initializer.Azure.KeyVault;
 using MRA.Pages.Api;
 using MRA.Pages.Application;
 using MRA.Pages.Infrastructure;
@@ -8,7 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApiServices();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-
+if (builder.Environment.IsProduction())
+{
+    builder.Configuration.ConfigureAzureKeyVault("Mra.Pages");
+    string appConfigConnectionString = builder.Configuration["AppConfigConnectionString"]!;
+    builder.Configuration.AddAzureAppConfig(appConfigConnectionString);
+    // builder.Logging.AddApiApplicationInsights(builder.Configuration);
+}
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
