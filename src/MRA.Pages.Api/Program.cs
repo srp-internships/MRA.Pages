@@ -7,16 +7,17 @@ using MRA.Pages.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiServices();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
 if (builder.Environment.IsProduction())
 {
     builder.Configuration.ConfigureAzureKeyVault("Mra.Pages");
     string appConfigConnectionString = builder.Configuration["AppConfigConnectionString"]!;
     builder.Configuration.AddAzureAppConfig(appConfigConnectionString);
-    // builder.Logging.AddApiApplicationInsights(builder.Configuration);
 }
+
+builder.Services.AddApiServices();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
