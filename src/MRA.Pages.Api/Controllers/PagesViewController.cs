@@ -33,19 +33,10 @@ public class PagesViewController(ISender mediator)
     [HttpGet]
     public async Task<IActionResult> Edit(string pageName)
     {
-        var pageResponse = await mediator.Send(new GetUpdatePageCommandQuery
+        var model = await mediator.Send(new GetUpdatePageCommandQuery
         {
             Name = pageName
         });
-        var model = new UpdatePageCommand
-        {
-            OldName = pageName,
-            Disabled = pageResponse.Disabled,
-            Name = pageResponse.Name,
-            Application = pageResponse.Application,
-            Role = pageResponse.Role,
-            ShowInMenu = pageResponse.ShowInMenu
-        };
         return View(model);
     }
 
