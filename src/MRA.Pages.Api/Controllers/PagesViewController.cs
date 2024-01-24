@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MRA.Pages.Application.Contract.Page.Commands;
@@ -7,7 +8,8 @@ using MRA.Pages.Infrastructure.Identity;
 
 namespace MRA.Pages.Api.Controllers;
 
-[Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
+[Authorize(Policy = ApplicationPolicies.SuperAdministrator,
+    AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class PagesViewController(ISender mediator)
     : Controller
 {

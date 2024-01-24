@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MRA.Pages.Application.Contract.Content.Commands;
@@ -8,7 +9,8 @@ using MRA.Pages.Infrastructure.Identity;
 
 namespace MRA.Pages.Api.Controllers;
 
-[Authorize(Policy = ApplicationPolicies.SuperAdministrator)]
+[Authorize(Policy = ApplicationPolicies.SuperAdministrator,
+    AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
 public class ContentViewController(ISender mediator, IMapper mapper)
     : Controller
 {

@@ -4,4 +4,5 @@ public interface ICurrentUserService
 {
     bool IsSuperAdmin();
     bool IsInRole(string roleName);
+    bool IsInRole(IEnumerable<string> roles);
 }

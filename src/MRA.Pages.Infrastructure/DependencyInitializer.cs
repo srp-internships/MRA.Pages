@@ -72,7 +72,7 @@ public static class DependencyInitializer
         });
 
         services.AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build())
             .AddPolicy(ApplicationPolicies.SuperAdministrator, op => op

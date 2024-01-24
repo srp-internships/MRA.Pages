@@ -28,6 +28,12 @@ public class GetPagesQueryHandler(IApplicationDbContext context, ICurrentUserSer
         }
 
         var result = await query.ToArrayAsync(cancellationToken);
+        if (!userService.IsSuperAdmin())
+        {
+            result = result.Where(s => s.Role != null && userService.IsInRole(s.Role.Split(',')))
+                .ToArray(); //after lazy loading because in Where we cant call external methods
+        }
+
         return result.Select(mapper.Map<PageResponse>).ToList();
     }
 }

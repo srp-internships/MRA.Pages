@@ -16,7 +16,7 @@
                 <div class="card-body">
 
                     <form method="post" asp-action="Update">
-                        <input type="hidden" asp-for="OldName">
+                        <input type="hidden" asp-for="OldName" value="@Model.Name">
                         <div class="form-group">
                             <label asp-for="Name">Name</label>
                             <input type="text" class="form-control" asp-for="Name" placeholder="Enter page name">
