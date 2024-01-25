@@ -10,9 +10,9 @@ public class PagesController(ISender mediator)
     : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] GetPagesQuery query)
     {
-        var pages = await mediator.Send(new GetPagesQuery());
+        var pages = await mediator.Send(query);
         return Ok(pages);
     }
 
