@@ -15,4 +15,9 @@ public class CurrentUserService(IHttpContextAccessor httpContext) : ICurrentUser
     {
         return httpContext.HttpContext?.User.IsInRole(roleName) ?? false;
     }
+
+    public bool IsInRole(IEnumerable<string> roles)
+    {
+        return roles.Any(IsInRole);
+    }
 }

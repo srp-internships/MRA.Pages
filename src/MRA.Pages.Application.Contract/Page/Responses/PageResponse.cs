@@ -7,4 +7,5 @@ public class PageResponse
     public string? Application { get; set; }
     public string Role { get; set; } = "";
     public bool ShowInMenu { get; set; }
+    public required string Title { get; set; }
 }
