@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using Application.IntegrationTests.Services;
 using MRA.Pages.Application.Contract;
@@ -43,13 +44,47 @@ public class GetPagesQueryTests : BaseTest
         });
     }
 
+    [Test]
+    public async Task GetPages_WithoutLangAndRole_ReturnsBadRequest()
+    {
+        await AddAsync(GetPage("page52", "title", "en-US", "Applicant,Reviewer,ApplicationAdmin"));
+        await AddAsync(GetPage("page63", "title", "en-US", "Applicant,Reviewer,ApplicationAdmin"));
+        await AddAsync(GetPage("page74", "title", "en-US", "ApplicationAdmin"));
+
+        _httpClient.ClearAuthorization(); //without auth
+        var response = await _httpClient.GetAsync(Routes.Pages); //without lang
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task GetPages_SetApplication_ReturnsSuggestApplicationPagesAndNullApplicationPages()
+    {
+        await AddAsync(GetPage("other", "title", "en-US"));
+        await AddAsync(GetPage("other1", "title", "en-US"));
+        await AddAsync(GetPage("application", "title", "en-US", default, "current"));
+        await AddAsync(GetPage("application1", "title", "en-US", default, "other"));
+
+        _httpClient.ClearAuthorization();
+        var response =
+            await _httpClient.GetFromJsonAsync<List<PageResponse>>(Routes.Pages + "?lang=en-US&Application=current");
+        Assert.That(response, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(response?.FirstOrDefault(s => s.Name == "other"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "other1"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "application"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "application1"), Is.Null);
+        });
+    }
+
+
     private static MRA.Pages.Domain.Entities.Page GetPage(string name, string contentTitle, string contentLang,
-        string? roles = null)
+        string? roles = null, string? application = null)
     {
         var page = new MRA.Pages.Domain.Entities.Page
         {
             Name = name,
-            Application = null,
+            Application = application,
             Role = roles,
             ShowInMenu = false,
             Contents =
