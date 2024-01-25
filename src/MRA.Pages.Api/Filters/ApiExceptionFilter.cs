@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MRA.Pages.Application.Common.Exceptions;
@@ -41,7 +40,7 @@ public class ApiExceptionFilter(ILogger<ApiExceptionFilter> logger) : ExceptionF
     
     private bool HandleBadRequestException(ExceptionContext context)
     {
-        var exception = (ConflictException)context.Exception;
+        var exception = (BadRequestException)context.Exception;
 
         var details = new ProblemDetails
         {
@@ -49,7 +48,7 @@ public class ApiExceptionFilter(ILogger<ApiExceptionFilter> logger) : ExceptionF
             Detail = exception.Message
         };
 
-        context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status409Conflict };
+        context.Result = new ObjectResult(details) { StatusCode = StatusCodes.Status400BadRequest };
 
         return true;
     }

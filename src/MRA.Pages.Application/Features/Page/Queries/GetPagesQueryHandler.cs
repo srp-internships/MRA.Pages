@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MRA.Pages.Application.Common.Exceptions;
 using MRA.Pages.Application.Common.Interfaces;
 using MRA.Pages.Application.Contract.Page.Queries;
 using MRA.Pages.Application.Contract.Page.Responses;
@@ -13,11 +14,6 @@ public class GetPagesQueryHandler(IApplicationDbContext context, ICurrentUserSer
     {
         var query = context.Pages.Where(s => true);
 
-        if (request.Application != null)
-        {
-            query = query.Where(s => s.Application == request.Application);
-        }
-
         if (request.ShowInMenu != null)
         {
             query = query.Where(s => s.ShowInMenu == request.ShowInMenu);
@@ -28,16 +24,25 @@ public class GetPagesQueryHandler(IApplicationDbContext context, ICurrentUserSer
             query = query.Where(s => !s.Disabled);
         }
 
-        var result = await query.ToArrayAsync(cancellationToken);
+        var result = await query.AsNoTracking().ToArrayAsync(cancellationToken);
         if (!userService.IsSuperAdmin())
         {
+            if (string.IsNullOrEmpty(request.Lang))
+            {
+                throw new BadRequestException("You must choose language");
+            }
             result = result.Where(s => s.Role == null || userService.IsInRole(s.Role.Split(',')))
                 .ToArray(); //after lazy loading because in Where we cant call external methods
 
             var pageResponses = result.Select(mapper.Map<PageResponse>).ToList();
-            foreach (var pageResponse in pageResponses)
+            result = null;
+            
+            for (var i = 0; i < pageResponses.Count; i++)
             {
-                var title = (await context.Contents.FirstOrDefaultAsync(s => s.Lang == request.Lang, cancellationToken))
+                var pageResponse = pageResponses[i];
+                var title = (await context.Contents.Include(f => f.Page)
+                        .FirstOrDefaultAsync(s => s.Lang == request.Lang && s.Page.Name == pageResponse.Name,
+                            cancellationToken))
                     ?.Title;
                 if (title == null)
                 {
@@ -46,6 +51,18 @@ public class GetPagesQueryHandler(IApplicationDbContext context, ICurrentUserSer
                 else
                 {
                     pageResponse.Title = title;
+                }
+
+                if (title != null)
+                {
+                    if (!string.IsNullOrEmpty(pageResponse.Application))
+                    {
+                        if (string.IsNullOrEmpty(request.Application) ||
+                            !pageResponse.Application.Split(',').Contains(request.Application))
+                        {
+                            pageResponses.Remove(pageResponse);
+                        }
+                    }
                 }
             }
 
