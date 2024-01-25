@@ -33,7 +33,6 @@ public static class DependencyInitializer
         return services.AddSecurityProviders(configuration);
     }
 
-
     private static IServiceCollection AddSecurityProviders(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -42,7 +41,7 @@ public static class DependencyInitializer
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
@@ -56,15 +55,7 @@ public static class DependencyInitializer
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
-        });
-
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.LoginPath = "/Authorization/Login";
                 options.AccessDeniedPath = "/Extra/Forbidden";
