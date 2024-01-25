@@ -104,6 +104,10 @@ public class CreatePageCommandTests : BaseTest
         _httpClient.ClearAuthorization();
         await _httpClient.AddAuthorizationAsync(ClaimsBuilder.New().AddRole(role).Build());
         var response = await _httpClient.PostAsFormAsync(CreatePageEndPoint, command);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Redirect));
+            Assert.That(response.Headers.Location?.ToString(), Does.Contain("/extra/forbidden").IgnoreCase);
+        });
     }
 }

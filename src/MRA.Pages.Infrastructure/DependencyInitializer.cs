@@ -45,7 +45,7 @@ public static class DependencyInitializer
             options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(op =>
+        }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, op =>
         {
             op.TokenValidationParameters = new TokenValidationParameters
             {
@@ -64,14 +64,14 @@ public static class DependencyInitializer
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddCookie(options =>
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
                 options.LoginPath = "/Authorization/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.AccessDeniedPath = "/Extra/Forbidden";
             });
 
         services.AddAuthorizationBuilder()
-            .SetDefaultPolicy(new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+            .SetDefaultPolicy(new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme)
                 .RequireAuthenticatedUser()
                 .Build())
             .AddPolicy(ApplicationPolicies.SuperAdministrator, op => op

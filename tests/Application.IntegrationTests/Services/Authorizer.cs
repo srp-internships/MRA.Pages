@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Authentication;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -17,24 +16,17 @@ public static class Authorizer
     {
         client.DefaultRequestHeaders.Clear(); //todo clear token from cookie without clearing header;
     }
-    
+
     public static async Task AddAuthorizationAsync(this HttpClient client, IEnumerable<Claim> claims)
     {
         var token = CreateJwt(claims);
         await client.GetAsync($"/authorization/callback?atoken={token}");
+    }
 
-        // if (response.StatusCode != HttpStatusCode.Redirect) throw new AuthenticationException();
-        
-        // var cookies = response.Headers.GetValues("Set-Cookie");
-        //
-        // const string targetCookieName = ".AspNetCore.Cookies";
-        //
-        // var targetCookieValue = cookies
-        //     .Where(cookie => cookie.Equals(targetCookieName))
-        //     .Select(cookie => cookie.Split(';')[0])
-        //     .FirstOrDefault() ?? throw new AuthenticationException();
-        //
-        // client.DefaultRequestHeaders.Add("Cookie", targetCookieValue);
+    public static void AddJwtAuthorization(this HttpClient client, IEnumerable<Claim> claims)
+    {
+        var token = CreateJwt(claims);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static string CreateJwt(IEnumerable<Claim> claims)
@@ -71,7 +63,7 @@ public class ClaimsBuilder
 
     public ClaimsBuilder AddSuperAdminRole() =>
         AddRole(ApplicationClaimValues.SuperAdministrator);
-    
+
     public ClaimsBuilder AddApplication(string applicationName) =>
         AddClaim(ClaimTypes.Application, applicationName);
 
