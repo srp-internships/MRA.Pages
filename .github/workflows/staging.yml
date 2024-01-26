@@ -26,3 +26,18 @@ jobs:
         run: |
           docker login silkroadprofessionals.azurecr.io -u silkroadprofessionals -p ${{ secrets.ACR_PASS }}
           docker push silkroadprofessionals.azurecr.io/mra-pages-api:${{ steps.taggerDryRun.outputs.new_tag }}
+
+      - name: Update infrastructure image version
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: update
+          token: ${{ secrets.GH_TOKEN }}
+          repository: srp-internships/MRAInfrastructure
+          client-payload: '{"version":"${{ steps.taggerDryRun.outputs.new_tag }}", "environment":"Staging", "image":"mra-pages-api"}'
+
+      - name: Minor version for each merge
+        id: taggerFinal
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          WITH_V: true
