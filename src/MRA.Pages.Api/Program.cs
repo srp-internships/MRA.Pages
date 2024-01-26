@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsProduction())
 {
-    builder.Configuration.ConfigureAzureKeyVault("Mra.Pages");
+    builder.Configuration.ConfigureAzureKeyVault("MraPages");
     string appConfigConnectionString = builder.Configuration["AppConfigConnectionString"]!;
     builder.Configuration.AddAzureAppConfig(appConfigConnectionString);
 }
