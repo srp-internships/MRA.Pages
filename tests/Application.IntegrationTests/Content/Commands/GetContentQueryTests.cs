@@ -39,7 +39,7 @@ public class GetContentQueryTests : BaseTest
     }
 
     [Test]
-    public async Task GetContent_WithRequiredRole_ReturnsForbidden()
+    public async Task GetContent_WithRequiredRole_ReturnsContent()
     {
         await InitPageAsync("newPage12", "Applicant,Reviewer");
         await AddContent("title13", "ru-RU", "this is html content");
@@ -52,6 +52,18 @@ public class GetContentQueryTests : BaseTest
             Assert.That(content?.HtmlContent, Is.EqualTo("this is html content"));
             Assert.That(content?.Title, Is.EqualTo("title13"));
         });
+    }
+
+    [Test]
+    public async Task GetContent_GetNotExistContent_ReturnsNotFound()
+    {
+        await InitPageAsync("newPage123");
+        await AddContent("title13", "ru-RU1", "this is html content");
+
+        _httpClient.ClearAuthorization();
+        var content =
+            await _httpClient.GetAsync(Routes.Contents + "?lang=ru-RU&pageName=newPage12");
+        Assert.That(content.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
 

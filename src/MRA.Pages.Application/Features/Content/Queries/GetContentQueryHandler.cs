@@ -12,10 +12,9 @@ public class GetContentQueryHandler(IApplicationDbContext context, IMapper mappe
 {
     public async Task<ContentResponse> Handle(GetContentQuery request, CancellationToken cancellationToken)
     {
-        var content = await context
-                                .Contents
-                                .Include(p => p.Page)
-                                .FirstOrDefaultAsync(s => s.Page.Name == request.PageName && s.Lang == request.Lang, cancellationToken);
+        var content = await context.Contents
+            .Include(p => p.Page)
+            .FirstOrDefaultAsync(s => s.Page.Name == request.PageName && s.Lang == request.Lang, cancellationToken);
         if (content?.Page == null)
         {
             throw new NotFoundException(
@@ -24,7 +23,7 @@ public class GetContentQueryHandler(IApplicationDbContext context, IMapper mappe
 
         if (string.IsNullOrEmpty(content.Page.Role) ||
             userService.IsSuperAdmin() ||
-            userService.IsInRole(content.Page.Role))
+            userService.IsInRole(content.Page.Role.Split(',')))
         {
             return mapper.Map<ContentResponse>(content);
         }
