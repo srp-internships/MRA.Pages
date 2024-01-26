@@ -18,7 +18,7 @@ public class GetContentQueryTests : BaseTest
 
         _httpClient.ClearAuthorization();
         var content =
-            await _httpClient.GetFromJsonAsync<ContentResponse>(Routes.Contents + "?pageName=newPage&lang=ru_RU");
+            await _httpClient.GetFromJsonAsync<ContentResponse>(Routes.Contents + "?pageName=newPage&lang=ru-RU");
         Assert.Multiple(() =>
         {
             Assert.That(content?.HtmlContent, Is.EqualTo("this is html content"));
@@ -34,10 +34,9 @@ public class GetContentQueryTests : BaseTest
 
         _httpClient.ClearAuthorization();
         var content =
-            await _httpClient.GetAsync(Routes.Contents + "?pageName=newPage1&lang=ru_RU");
+            await _httpClient.GetAsync(Routes.Contents + "?pageName=newPage1&lang=ru-RU");
         Assert.That(content.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
-
 
     [Test]
     public async Task GetContent_WithRequiredRole_ReturnsForbidden()
@@ -47,7 +46,7 @@ public class GetContentQueryTests : BaseTest
 
         _httpClient.AddJwtAuthorization(ClaimsBuilder.New().AddRole("Applicant").Build());
         var content =
-            await _httpClient.GetFromJsonAsync<ContentResponse>(Routes.Contents + "?lang=ru_RU&pageName=newPage");
+            await _httpClient.GetFromJsonAsync<ContentResponse>(Routes.Contents + "?lang=ru-RU&pageName=newPage12");
         Assert.Multiple(() =>
         {
             Assert.That(content?.HtmlContent, Is.EqualTo("this is html content"));
