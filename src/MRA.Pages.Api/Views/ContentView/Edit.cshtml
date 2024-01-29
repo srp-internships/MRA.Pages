@@ -15,7 +15,7 @@
                 <div class="card-body">
 
                     <form method="post" asp-action="Update" id="createContentForm">
-                        <input type="hidden" asp-for="PageName" value="@ViewBag.PageName"/>
+                        <input type="hidden" asp-for="PageName" value="@Model.PageName"/>
                         <input type="hidden" asp-for="OldLang" value="@Model.Lang"/>
                         <div class="form-group">
                             <label asp-for="Lang">Lang</label>
@@ -77,7 +77,7 @@
     });
     
     function internal_submitForm(){
-            document.getElementById('HtmlContent').value=quill.container.innerHTML;
+            document.getElementById('HtmlContent').value=quill.root.innerHTML;
             document.getElementById('createContentForm').submit();
         }
 </script>
