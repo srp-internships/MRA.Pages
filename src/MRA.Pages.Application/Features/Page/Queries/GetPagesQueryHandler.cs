@@ -31,42 +31,44 @@ public class GetPagesQueryHandler(IApplicationDbContext context, ICurrentUserSer
             {
                 throw new BadRequestException("You must choose language");
             }
+
             result = result.Where(s => s.Role == null || userService.IsInRole(s.Role.Split(',')))
                 .ToArray(); //after lazy loading because in Where we cant call external methods
 
             var pageResponses = result.Select(mapper.Map<PageResponse>).ToList();
+            var finalResult = new List<PageResponse>();
             result = null;
-            
-            for (var i = 0; i < pageResponses.Count; i++)
+
+            foreach (var pageResponse in pageResponses)
             {
-                var pageResponse = pageResponses[i];
                 var title = (await context.Contents.Include(f => f.Page)
                         .FirstOrDefaultAsync(s => s.Lang == request.Lang && s.Page.Name == pageResponse.Name,
                             cancellationToken))
                     ?.Title;
-                if (title == null)
-                {
-                    pageResponses.Remove(pageResponse);
-                }
-                else
-                {
-                    pageResponse.Title = title;
-                }
 
                 if (title != null)
                 {
+                    pageResponse.Title = title;
                     if (!string.IsNullOrEmpty(pageResponse.Application))
                     {
                         if (string.IsNullOrEmpty(request.Application) ||
                             !pageResponse.Application.Split(',').Contains(request.Application))
                         {
-                            pageResponses.Remove(pageResponse);
+                            finalResult.Remove(pageResponse);
                         }
+                        else
+                        {
+                            finalResult.Add(pageResponse);
+                        }
+                    }
+                    else
+                    {
+                        finalResult.Add(pageResponse);
                     }
                 }
             }
 
-            return pageResponses;
+            return finalResult;
         }
 
         return result.Select(mapper.Map<PageResponse>).ToList();

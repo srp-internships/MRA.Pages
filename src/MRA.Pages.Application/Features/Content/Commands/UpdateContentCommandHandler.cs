@@ -11,14 +11,24 @@ public class UpdateContentCommandHandler(IApplicationDbContext context, IMapper 
 {
     public async Task<Unit> Handle(UpdateContentCommand request, CancellationToken cancellationToken)
     {
-        var old = await context.Pages.FirstOrDefaultAsync(s => s.Name == request.OldLang, cancellationToken);
-        if (old == null)
+        var pageId = await context.Pages.Where(s => s.Name == request.PageName).Select(s => s.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        if (pageId.Equals(Guid.Empty))
         {
-            throw new NotFoundException($"can't find page with name {request.OldLang}");
+            throw new NotFoundException($"page with name {request.PageName} not found");
         }
 
-        mapper.Map(request, old);
+        var old = await context.Contents.FirstOrDefaultAsync(s => s.PageId == pageId && s.Lang == request.Lang,
+            cancellationToken);
+        if (old == null)
+        {
+            throw new NotFoundException($"the content with lang {request.OldLang} not found");
+        }
+
+        var content = mapper.Map(request, old);
+        content.PageId = pageId;
         await context.SaveChangesAsync(cancellationToken);
+
         return Unit.Value;
     }
 }

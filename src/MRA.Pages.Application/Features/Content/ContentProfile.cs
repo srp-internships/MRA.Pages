@@ -2,7 +2,7 @@ using AutoMapper;
 using MRA.Pages.Application.Contract.Content.Commands;
 using MRA.Pages.Application.Contract.Content.Responses;
 
-namespace MRA.Pages.Application.Features;
+namespace MRA.Pages.Application.Features.Content;
 
 public class ContentProfile : Profile
 {
@@ -14,5 +14,6 @@ public class ContentProfile : Profile
 
         CreateMap<CreateContentCommand, Domain.Entities.Content>();
         CreateMap<ContentResponse, UpdateContentCommand>();
+        CreateMap<UpdateContentCommand, Domain.Entities.Content>();
     }
 }
