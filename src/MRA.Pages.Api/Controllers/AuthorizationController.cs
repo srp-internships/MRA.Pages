@@ -20,6 +20,6 @@ public class AuthorizationController(IConfiguration configuration, JwtChecker ch
     public IActionResult Login()
     {
         return Redirect(
-            $"{configuration["MraIdentity-client"]}/login?callback={configuration["MraPages-hostname"]}/Authorization/callback");
+            $"{configuration["MraIdentity-HostName"]}/login?callback={configuration["MraPages-HostName"]}/Authorization/callback");
     }
 }

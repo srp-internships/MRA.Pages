@@ -57,8 +57,8 @@ public static class DependencyInitializer
             };
         }).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.LoginPath = "/Authorization/Login";
-                options.AccessDeniedPath = "/Extra/Forbidden";
+                options.LoginPath = "Authorization/Login";
+                options.AccessDeniedPath = "Extra/Forbidden";
             });
 
         services.AddAuthorizationBuilder()
