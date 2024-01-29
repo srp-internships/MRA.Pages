@@ -70,9 +70,9 @@ public class GetPagesQueryTests : BaseTest
         Assert.That(response, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(response?.FirstOrDefault(s => s.Name == "other"), Is.Not.Null);
-            Assert.That(response?.FirstOrDefault(s => s.Name == "other1"), Is.Not.Null);
-            Assert.That(response?.FirstOrDefault(s => s.Name == "application"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "other" && s.Title == "title"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "other1" && s.Title == "title"), Is.Not.Null);
+            Assert.That(response?.FirstOrDefault(s => s.Name == "application" && s.Title == "title"), Is.Not.Null);
             Assert.That(response?.FirstOrDefault(s => s.Name == "application1"), Is.Null);
         });
     }
