@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+src/.idea/.idea.MRA.Pages/.idea/.gitignore
+src/.idea/.idea.MRA.Pages/.idea/.name
+src/.idea/.idea.MRA.Pages/.idea/dataSources.xml
+src/.idea/.idea.MRA.Pages/.idea/encodings.xml
+src/.idea/.idea.MRA.Pages/.idea/indexLayout.xml
+src/.idea/.idea.MRA.Pages/.idea/jsLibraryMappings.xml
+src/.idea/.idea.MRA.Pages/.idea/vcs.xml
