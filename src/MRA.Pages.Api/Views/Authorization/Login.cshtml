@@ -1,0 +1,10 @@
+@model dynamic
+
+@{
+    ViewBag.Title = "Authorize";
+    Layout = null;
+}
+<div style="text-align: center">
+    <h3>You must pass authorization for this route</h3>
+    <a href="@ViewBag.AuthorizationLink">Authorize</a>
+</div>
