@@ -19,7 +19,8 @@ public class AuthorizationController(IConfiguration configuration, JwtChecker ch
 
     public IActionResult Login()
     {
-        return Redirect(
-            $"{configuration["MraIdentityClient-HostName"]}/login?callback={configuration["MraPages-HostName"]}/Authorization/callback");
+        ViewBag.AuthorizationLink =
+            $"{configuration["MraIdentityClient-HostName"]}/login?callback={configuration["MraPages-HostName"]}/Authorization/callback";
+        return View();
     }
 }
