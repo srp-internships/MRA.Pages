@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MRA.Pages.Infrastructure.Services;
 
-public class JwtChecker(IHttpContextAccessor httpContextAccessor,IConfiguration configuration)
+public class JwtChecker(IHttpContextAccessor httpContextAccessor,IConfiguration configuration,Logger<JwtChecker> logger)
 {
     public async Task<bool> LoginAsync(string jwtToken)
     {
@@ -37,8 +38,9 @@ public class JwtChecker(IHttpContextAccessor httpContextAccessor,IConfiguration 
                 });
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            logger.LogError(e,"error when checking token");
             return false;
         }
     }
