@@ -25,7 +25,7 @@ public class AuthorizationController(
     public IActionResult Login()
     {
         ViewBag.AuthorizationLink =
-            $"{configuration["MraIdentityClient-HostName"]}/login?callback={configuration["MraPages-HostName"]}/pages/Authorization/callback";
+            $"{configuration["MraIdentityClient-HostName"]}/login?callback={configuration["MraPages-HostName"]}/Authorization/callback";
         return View();
     }
 }
