@@ -3,10 +3,14 @@ using MRA.Pages.Infrastructure.Services;
 
 namespace MRA.Pages.Api.Controllers;
 
-public class AuthorizationController(IConfiguration configuration, JwtChecker checker) : Controller
+public class AuthorizationController(
+    IConfiguration configuration,
+    JwtChecker checker,
+    ILogger<AuthorizationController> logger) : Controller
 {
     public async Task<IActionResult> CallBack(string atoken)
     {
+        logger.LogInformation("callback requested");
         var success = await checker.LoginAsync(atoken);
         if (success)
         {
