@@ -7,7 +7,7 @@ namespace Application.IntegrationTests.Content.Commands;
 public class CreateContentCommandTests : BaseTest
 {
     private MRA.Pages.Domain.Entities.Page _page = null!;
-    private const string CreateContentUrl = "/contentView/Create";
+    private const string CreateContentUrl = "/pages/contentView/Create";
 
     [SetUp]
     public async Task Setup()

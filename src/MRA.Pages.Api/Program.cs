@@ -14,7 +14,7 @@ if (builder.Environment.IsProduction())
     builder.Configuration.AddAzureAppConfig(appConfigConnectionString);
 }
 
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Environment.IsDevelopment());
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
@@ -47,7 +47,7 @@ app.UseCookiePolicy();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=PagesView}/{action=Index}/{id?}");
+    pattern: "pages/{controller=PagesView}/{action=Index}/{id?}");
 
 app.UseAuthentication();
 app.UseAuthorization();

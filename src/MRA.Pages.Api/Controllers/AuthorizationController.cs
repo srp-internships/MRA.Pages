@@ -14,7 +14,7 @@ public class AuthorizationController(
         var success = await checker.LoginAsync(atoken);
         if (success)
         {
-            ViewBag.RedirectUrl = "/pagesView/index";
+            ViewBag.RedirectUrl = Url.Action("Index", "PagesView")!;
             return View("ExtraPages/Redirect");
         }
 

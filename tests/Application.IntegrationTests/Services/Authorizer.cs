@@ -20,7 +20,7 @@ public static class Authorizer
     public static async Task AddAuthorizationAsync(this HttpClient client, IEnumerable<Claim> claims)
     {
         var token = CreateJwt(claims);
-        await client.GetAsync($"/authorization/callback?atoken={token}");
+        await client.GetAsync($"/pages/authorization/callback?atoken={token}");
     }
 
     public static void AddJwtAuthorization(this HttpClient client, IEnumerable<Claim> claims)
