@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\" />
+      <Folder Include="wwwroot\pagesMetadata\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,6 +28,8 @@
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Authorization\UnAuthorized.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\preview.PNG" />
+      <_ContentIncludedByDefault Remove="wwwroot\pagesMetadata\images\preview.PNG" />
     </ItemGroup>
 
 </Project>
