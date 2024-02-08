@@ -30,6 +30,7 @@ public static class DependencyInitializer
         services.AddScoped<ApplicationDbContextInitializer>();
         services.AddScoped<DbMigration>();
         services.AddScoped<JwtChecker>();
+        services.AddLogging();
         return services.AddSecurityProviders(configuration);
     }
 

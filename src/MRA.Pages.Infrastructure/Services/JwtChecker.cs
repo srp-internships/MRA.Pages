@@ -10,7 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MRA.Pages.Infrastructure.Services;
 
-public class JwtChecker(IHttpContextAccessor httpContextAccessor,IConfiguration configuration,Logger<JwtChecker> logger)
+public class JwtChecker(
+    IHttpContextAccessor httpContextAccessor,
+    IConfiguration configuration,
+    ILogger<JwtChecker> logger)
 {
     public async Task<bool> LoginAsync(string jwtToken)
     {
@@ -40,7 +43,7 @@ public class JwtChecker(IHttpContextAccessor httpContextAccessor,IConfiguration 
         }
         catch (Exception e)
         {
-            logger.LogError(e,"error when checking token");
+            logger.LogError(e, "error when checking token");
             return false;
         }
     }
