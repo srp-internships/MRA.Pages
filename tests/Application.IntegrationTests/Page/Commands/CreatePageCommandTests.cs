@@ -7,7 +7,7 @@ namespace Application.IntegrationTests.Page.Commands;
 
 public class CreatePageCommandTests : BaseTest
 {
-    private const string CreatePageEndPoint = "/pagesView/Create";
+    private const string CreatePageEndPoint = "/pages/PagesView/Create";
 
     [SetUp]
     public async Task Setup()
@@ -27,7 +27,7 @@ public class CreatePageCommandTests : BaseTest
             ShowInMenu = true
         };
         var response = await _httpClient.PostAsFormAsync(CreatePageEndPoint, command);
-        Assert.That(response.Headers.Location?.ToString(), Is.EqualTo("/"));
+        Assert.That(response.Headers.Location?.ToString(), Is.EqualTo("/pages"));
     }
 
     [Test]
