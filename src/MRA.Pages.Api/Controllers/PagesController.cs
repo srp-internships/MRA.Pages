@@ -5,7 +5,7 @@ using MRA.Pages.Application.Contract.Page.Queries;
 
 namespace MRA.Pages.Api.Controllers;
 
-[Route("/api/[controller]")]
+[Route("/pages/api/[controller]")]
 public class PagesController(ISender mediator)
     : Controller
 {
