@@ -42,7 +42,7 @@ public class CreatePageCommandTests : BaseTest
             ShowInMenu = true
         };
         await _httpClient.PostAsFormAsync(CreatePageEndPoint, command);
-        var response = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
+        var response = await FirsOrDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
         Assert.That(response, Is.Not.Null);
     }
 
@@ -84,7 +84,7 @@ public class CreatePageCommandTests : BaseTest
         };
         var response = await _httpClient.PostAsFormAsync(CreatePageEndPoint, command);
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        var result = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
+        var result = await FirsOrDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == command.Name);
         Assert.That(result, Is.Null);
     }
 

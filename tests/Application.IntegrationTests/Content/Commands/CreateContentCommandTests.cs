@@ -42,7 +42,7 @@ public class CreateContentCommandTests : BaseTest
             HtmlContent = "fasdfasdfsasdf"
         };
         await _httpClient.PostAsFormAsync(CreateContentUrl, command);
-        var response = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Content>(s => s.Lang == command.Lang);
+        var response = await FirsOrDefaultAsync<MRA.Pages.Domain.Entities.Content>(s => s.Lang == command.Lang);
         Assert.That(response, Is.Not.Null);
     }
 
@@ -89,7 +89,7 @@ public class CreateContentCommandTests : BaseTest
 
     private async Task SetPage(string name)
     {
-        var page = await FirsAllDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == name);
+        var page = await FirsOrDefaultAsync<MRA.Pages.Domain.Entities.Page>(s => s.Name == name);
         if (page == null)
         {
             page = new MRA.Pages.Domain.Entities.Page
