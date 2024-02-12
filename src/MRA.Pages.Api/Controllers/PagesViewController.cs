@@ -13,7 +13,7 @@ namespace MRA.Pages.Api.Controllers;
 public class PagesViewController(ISender mediator)
     : Controller
 {
-    [Route("/pages")]
+    [Route("/pages/pagesView")]
     public async Task<IActionResult> Index(GetPagesQuery? query = null)
     {
         var result = await mediator.Send(query ?? new GetPagesQuery());
