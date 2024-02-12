@@ -27,7 +27,7 @@ public class CreatePageCommandTests : BaseTest
             ShowInMenu = true
         };
         var response = await _httpClient.PostAsFormAsync(CreatePageEndPoint, command);
-        Assert.That(response.Headers.Location?.ToString(), Is.EqualTo("/pages"));
+        Assert.That(response.Headers.Location?.ToString(), Is.EqualTo("/pages/pagesView"));
     }
 
     [Test]
