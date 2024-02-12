@@ -55,4 +55,11 @@ public class ContentViewController(ISender mediator, IMapper mapper)
         await mediator.Send(command);
         return Redirect($"{Url.Action("Index")}?pageName={command.PageName}");
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(DeleteContentCommand command)
+    {
+        await mediator.Send(command);
+        return Redirect($"{Url.Action("Index")}?pageName={command.PageName}");
+    }
 }
