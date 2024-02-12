@@ -49,4 +49,11 @@ public class PagesViewController(ISender mediator)
         await mediator.Send(updatePageCommand);
         return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(DeletePageCommand command)
+    {
+        await mediator.Send(command);
+        return RedirectToAction("Index");
+    }
 }
