@@ -61,7 +61,7 @@ public abstract class BaseTest
         await _context.SaveChangesAsync();
     }
 
-    protected async Task<T?> FirsAllDefaultAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+    protected async Task<T?> FirsOrDefaultAsync<T>(Expression<Func<T, bool>> predicate) where T : class
     {
         InitContext();
         var firstOrDefaultAsync = await _context.Set<T>().FirstOrDefaultAsync(predicate);

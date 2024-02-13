@@ -1,4 +1,5 @@
 @using MRA.Pages.Application.Contract.Content.Responses
+@model DeleteContentCommand
 @{
     ViewBag.Title = "Contents of page " + ViewBag.PageName;
     Layout = "_Layout";
@@ -43,7 +44,7 @@
                     </a>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger">
+                    <button type="button" class="btn btn-danger" onclick="remove('@contentResponse.PageName','@contentResponse.Lang')">
                         <i class="fas fa-trash"></i> Remove
                     </button>
                 </td>
@@ -53,3 +54,40 @@
     }
     </tbody>
 </table>
+
+
+
+
+<div class="modal" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Delete" method="post">
+                <div class="modal-body" id="modal-body">
+                    <input type="hidden" asp-for="Lang" id="Lang"/>
+                    <input type="hidden" asp-for="PageName" id="PageName"/>
+                    <p id="modalBodyContent"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Remove</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+        function remove(pageName, lang){
+            $("#PageName").val(pageName);
+            $("#Lang").val(lang);
+            $("#modalBodyContent").html("<p>Are you sure about removing content with lang " + lang + " and with pageName "+pageName+"?");
+            $('#removeModal').modal('show');
+        }
+
+</script>
