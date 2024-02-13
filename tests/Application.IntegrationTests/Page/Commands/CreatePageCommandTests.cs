@@ -21,7 +21,7 @@ public class CreatePageCommandTests : BaseTest
         var command = new CreatePageCommand
         {
             Disabled = false,
-            Name = "name",
+            Name = "nameUnique",
             Application = "",
             Role = "",
             ShowInMenu = true

@@ -29,11 +29,7 @@
                             <label asp-for="HtmlContent">Content</label>
 
                             <div id="editor">
-                                <p>Hello World!</p>
-                                <p>Some initial <strong>bold</strong> text</p>
-                                <p>
-                                    <br>
-                                </p>
+                                @Html.Raw(Model.HtmlContent)
                             </div>
                         </div>
                         <input type="hidden" asp-for="HtmlContent"/>
